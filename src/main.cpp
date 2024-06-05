@@ -8,13 +8,13 @@
 #include <Adafruit_NeoPixel.h>
 #include <ArduinoJson.h>
 
-#define PIN        18
+#define PIN 18
 #define NUMPIXELS 1
 
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
-const char* ssid = "Zajebiste hotspot";
-const char* password = "12345678";
+const char* ssid = "GLM1111";
+const char* password = "Bestcity";
 
 unsigned long previousMillis = 0;
 const long interval = 500; // 10 seconds

@@ -1,0 +1,160 @@
+body {
+    background-color: #121212;
+    color: #E0E0E0;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #BB86FC;
+}
+
+a:hover {
+    color: #3700B3;
+}
+
+nav {
+    background-color: #1F1F1F;
+    padding: 0.5em;
+}
+
+nav a {
+    color: #BB86FC;
+    margin: 0 1em;
+}
+
+nav a:hover {
+    color: #3700B3;
+}
+
+
+.header {
+    height: 6vh;
+    display: inline-block;
+    margin-top: 0.3em;
+}
+
+#connection-status{
+    display: inline;
+    font-size: 1.5em;
+    padding-left: 1em;
+    padding-right: 1em;
+    border: 1px solid;
+    border-radius: 0.7em;
+}
+#connection-status.disconnected{
+    color: red;
+}
+#connection-status.connected{
+    color: rgb(81, 255, 0);
+}
+
+
+.container {
+    display: flex;
+    height: 90vh;
+}
+
+.column {
+    flex: 1;
+    
+    box-sizing: border-box;
+}
+
+.left {
+    background-color: #1F1F1F;
+}
+
+.middle {
+    flex: 2;
+    background-color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.right {
+    background-color: #1F1F1F;
+}
+
+canvas {
+    border: 2px solid #ff9900;
+}
+
+.slider-label {
+    font-size: 1.2em;
+    width: 40%;
+    margin-left: 1em;
+    margin-right: 15px;
+    margin-top: 0.3em;
+    padding: 0.1em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    background-color: #000;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.slider-value {
+    width: 30%;
+    margin: 0.1em;
+    margin-left: 0.5em;
+    padding: 0.1em;
+    color: #ff9900;
+    font-size: 1.3em;
+    font-weight: bold;
+    border: solid 1px ;
+    border-radius: 1em;
+    text-align: center;
+}
+
+.slider-name{
+    width: 68%;
+}
+
+input[type="range"] {
+    width: 45%;
+    
+}
+
+#config-panel{
+    border: 2px dashed orange;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+#config-title{
+    margin-left: 1em;
+    margin-top: 0.2em;
+    font-size: 1.4em;
+}
+
+#config-control{
+    margin-left: 1em;
+    margin-top: 0.2em;
+}
+
+.config-button{
+   
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    font-size: 1.2em;
+    background-color: #c7ff6c;
+    border-radius: 1em;
+    border: 2px solid black;
+    
+}
+
+.config-button:hover{
+    background-color: #71b309;
+    transition: 0.3s;
+    
+}
+.config-button:active{
+    background-color: #eaee11;
+    transition: 0.1s;
+    
+}
+

@@ -8,6 +8,10 @@ function onLoad(event) {
 }
 
 function initWebSocket() {
+    if (gateway == "ws:///ws") {
+        console.error("Local file in browser. not connecting websocket");
+        return
+    }
     ws = new WebSocket(gateway);
     ws.onopen = onOpen;
     ws.onclose = onClose;
@@ -58,3 +62,15 @@ window.onload = function() {
             ws.send(JSON.stringify(sliderData));
         }
     }
+
+
+document.querySelectorAll('.slider').forEach(slider => {
+    slider.addEventListener('input', (event) => {
+        var valueDisplay = event.target.parentElement.querySelector('.slider-value');
+        valueDisplay.textContent = event.target.value;
+    });
+});
+
+function updateSlider(slider){
+    slider.parentElement.querySelector('.slider-value').textContent = slider.value
+}
