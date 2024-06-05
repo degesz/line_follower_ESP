@@ -5,14 +5,14 @@
 #include <SPIFFS.h>
 #include <Adafruit_NeoPixel.h>
 #include <ArduinoJson.h>
+#include "websockets.h"
+#include "credentials.h"
 
 #define PIN 18
 #define NUMPIXELS 1
 
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
-const char* ssid = "GLM1111";
-const char* password = "Bestcity";
 
 unsigned long previousMillis = 0;
 const long interval = 500; // 10 seconds
@@ -25,53 +25,6 @@ AsyncWebSocket ws("/ws");
 void notFound(AsyncWebServerRequest *request) {
   request->send(404, "text/plain", "Not found");
 }
-
-// WebSocket event handler
-void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
-  if (type == WS_EVT_CONNECT) {
-    Serial.println("WebSocket client connected");
-    client->text("Connected!");
-  } else if (type == WS_EVT_DISCONNECT) {
-    Serial.println("WebSocket client disconnected");
-  } else if (type == WS_EVT_DATA) {
-    Serial.println("WebSocket data received");
-
-    // Convert data to a String
-    String message = "";
-    for (size_t i = 0; i < len; i++) {
-      message += (char) data[i];
-    }
-
-    // Print the received message
-    Serial.printf("Received: %s\n", message.c_str());
-
-   // Parse the JSON data
-   StaticJsonDocument<200> msg;
-   DeserializationError error = deserializeJson(msg, message);
-
-   if (error) {
-     Serial.print(F("deserializeJson() failed: "));
-     Serial.println(error.f_str());
-     return;
-   }
-
-  if (msg["type"] == "ping")
-  {
-    client->text(message);    // return ping message to client
-  }
-  
-
-    // Extract values from the JSON object
-    //byte sliderColor = doc["color"];
-    int red = msg["red"];
-    int green = msg["green"];
-    int blue = msg["blue"];
-
-    pixels.setPixelColor(0, pixels.Color(red, green, blue));
-    pixels.show(); 
-  }
-}
-
 
 String get_wifi_status(int status){
     switch(status){
@@ -163,4 +116,3 @@ void loop(){
 
   ws.cleanupClients();
 }
-
