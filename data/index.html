@@ -8,7 +8,7 @@
 <body>
     <div class="header">
         <h1 style=" margin-left: 1em; margin-right: 1em; display: inline;">Line Follower - Control Panel</h1>
-        <div class="disconnected" id="connection-status">Disconnected &ThickSpace; Ping: <span id="ping">x</span> ms</div>
+        <div class="disconnected" id="connection-status">Disconnected</div>
     <!---   <div id="sliders">
             <input type="range" min="1" max="255" value="50" class="slider" id="redSlider">
             <input type="range" min="1" max="255" value="50" class="slider" id="greenSlider">
@@ -23,7 +23,7 @@
             <div id="config-panel">
                 <span id="config-title">Parameter config</span>
                 <div id="config-control">
-                    <input class="config-button" type="button" value="Load">
+                    <input class="config-button" type="button" value="Load" onclick="ws.send(JSON.stringify({type: 'config-request'}))">
                     <input  class="config-button" type="button" value="Save">
                     <input  class="config-button" type="button" value="Autosave">
                 </div>
@@ -31,32 +31,35 @@
                     <div class="slider-label">
                         <span class="slider-name">Parameter 1</span>
                         <span style="color: #db220a;"  class="slider-value">0</span>
+                        <input type="range" min="0" max="3" step="0.1" value="0" class="config-slider" oninput="updateSlider(this)">
                     </div>
-                    <input type="range" min="0" max="255" value="0" class="slider" oninput="updateSlider(this)">
+                    
                 </div>
             
                 <div class="slider-container">
                     <div class="slider-label">
                         <span class="slider-name">Param 2</span>
                         <span style="color: #ddb501;" class="slider-value">0</span>
+                        <input type="range" min="0" max="255" value="0" class="config-slider" oninput="updateSlider(this)">
                     </div>
-                    <input type="range" min="0" max="255" value="0" class="slider" oninput="updateSlider(this)">
+                    
                 </div>
             
                 <div class="slider-container">
                     <div class="slider-label">
                         <span class="slider-name">Param 3</span>
                         <span style="color: #35df0b;" class="slider-value">0</span>
+                        <input type="range" min="0" max="3" step="0.1" value="0" class="config-slider" oninput="updateSlider(this)">
                     </div>
-                    <input type="range" min="0" max="3" step="0.1" value="0" class="slider" oninput="updateSlider(this)">
+                    
                 </div>
 
                 <div class="slider-container">
                     <div class="slider-label">
                         <span class="slider-name">Param 4</span>
                         <span style="color: #0ca6d4;" class="slider-value">0</span>
+                        <input type="range" min="0" max="3" step="0.1" value="0" class="config-slider" oninput="updateSlider(this)">
                     </div>
-                    <input type="range" min="0" max="3" step="0.1" value="0" class="slider" oninput="updateSlider(this)">
                 </div>
                 
             </div>

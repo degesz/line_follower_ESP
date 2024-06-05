@@ -28,10 +28,35 @@ function onClose(event) {
 }
 
 function onMessage(event) {
-    console.log(event.data);
-    document.getElementById('message').innerHTML = event.data;
+    var msg = JSON.parse(event.data)
+    console.log("recieved message: ");
+    console.log(msg)
+
+    if (msg.type == "ping") {
+        var pingTime = Date.now() - msg.sendTime;
+        if (pingTime < 200) {
+            document.getElementById("connection-status").classList.remove("disconnected")
+            document.getElementById("connection-status").classList.add("connected")
+            document.getElementById("connection-status").innerHTML = 'OK &ThickSpace; Ping: <span id="ping"> </span> ms'
+            document.getElementById("ping").innerText = pingTime
+        }
+        else{
+            document.getElementById("connection-status").classList.add("disconnected")
+            document.getElementById("connection-status").classList.remove("connected")
+            document.getElementById("connection-status").innerHTML = 'Disconnected'
+        }
+    } 
+    else {
+        
+    }
 }
 
+setInterval(function() {        //Send ping messages
+    ws.send(JSON.stringify({
+        type: "ping",
+        sendTime: Date.now(),
+    }))
+  }, 500);
 
 
 window.onload = function() {

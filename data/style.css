@@ -84,7 +84,7 @@ canvas {
 
 .slider-label {
     font-size: 1.2em;
-    width: 40%;
+    width: 90%;
     margin-left: 1em;
     margin-right: 15px;
     margin-top: 0.3em;
@@ -114,9 +114,8 @@ canvas {
     width: 68%;
 }
 
-input[type="range"] {
-    width: 45%;
-    
+.config-slider{
+    width: 100%;
 }
 
 #config-panel{

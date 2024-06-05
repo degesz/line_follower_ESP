@@ -1,6 +1,4 @@
 #include <Arduino.h>
-
-
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 #include <AsyncTCP.h>
@@ -32,24 +30,24 @@ void notFound(AsyncWebServerRequest *request) {
 void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
   if (type == WS_EVT_CONNECT) {
     Serial.println("WebSocket client connected");
-    client->text("Welcome to the WebSocket server!");
+    client->text("Connected!");
   } else if (type == WS_EVT_DISCONNECT) {
     Serial.println("WebSocket client disconnected");
   } else if (type == WS_EVT_DATA) {
     Serial.println("WebSocket data received");
 
     // Convert data to a String
-    String msg = "";
+    String message = "";
     for (size_t i = 0; i < len; i++) {
-      msg += (char) data[i];
+      message += (char) data[i];
     }
 
     // Print the received message
-    Serial.printf("Received: %s\n", msg.c_str());
+    Serial.printf("Received: %s\n", message.c_str());
 
    // Parse the JSON data
-   StaticJsonDocument<200> doc;
-   DeserializationError error = deserializeJson(doc, msg);
+   StaticJsonDocument<200> msg;
+   DeserializationError error = deserializeJson(msg, message);
 
    if (error) {
      Serial.print(F("deserializeJson() failed: "));
@@ -57,13 +55,19 @@ void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsE
      return;
    }
 
-   // Extract values from the JSON object
-   //byte sliderColor = doc["color"];
-   int red = doc["red"];
-   int green = doc["green"];
-   int blue = doc["blue"];
+  if (msg["type"] == "ping")
+  {
+    client->text(message);    // return ping message to client
+  }
+  
 
-  pixels.setPixelColor(0, pixels.Color(red, green, blue));
+    // Extract values from the JSON object
+    //byte sliderColor = doc["color"];
+    int red = msg["red"];
+    int green = msg["green"];
+    int blue = msg["blue"];
+
+    pixels.setPixelColor(0, pixels.Color(red, green, blue));
     pixels.show(); 
   }
 }
