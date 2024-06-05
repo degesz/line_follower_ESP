@@ -122,8 +122,24 @@ void setup(){
     request->send(SPIFFS, "/script.js", "application/javascript");
   });
 
-  // Handle 404
-  server.onNotFound(notFound);
+    // Wildcard handler for any file
+  server.onNotFound([](AsyncWebServerRequest *request) {
+    String filename = request->url();
+    String contentType = "text/plain"; // Default to text/plain
+    if (filename.endsWith(".js")) {
+      contentType = "application/javascript";
+    } else if (filename.endsWith(".css")) {
+      contentType = "text/css";
+    } else if (filename.endsWith(".html")) {
+      contentType = "text/html";
+    }
+
+    if (SPIFFS.exists(filename)) {
+      request->send(SPIFFS, filename, contentType);
+    } else {
+      request->send(404, "text/plain", "File not found");
+    }
+  });
 
   // WebSocket event handler
   ws.onEvent(onWebSocketEvent);
@@ -136,11 +152,6 @@ void setup(){
 }
 
 void loop(){
-    unsigned long currentMillis = millis();
-  if (currentMillis - previousMillis >= interval) {
-    previousMillis = currentMillis;
-    ws.textAll("Hello from ESP32");
-  }
 
   //  pixels.setPixelColor(0, pixels.Color(0, 150, 0));
 

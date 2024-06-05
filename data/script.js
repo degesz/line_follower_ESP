@@ -35,6 +35,11 @@ function onMessage(event) {
 
 
 window.onload = function() {
+
+    var canvas = document.getElementById("canvas");
+    canvas.width = document.querySelector(".middle").getBoundingClientRect().width - 10
+    canvas.height = document.querySelector(".middle").getBoundingClientRect().height - 10
+
     // Get the sliders container and all input elements within it
     const slidersContainer = document.getElementById('sliders');
     const sliders = slidersContainer.getElementsByTagName('input');
