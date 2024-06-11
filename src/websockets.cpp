@@ -19,7 +19,7 @@ void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsE
     Serial.printf("Received: %s\n", message.c_str());
 
     // Parse the JSON data
-    StaticJsonDocument<200> msg;
+    JsonDocument msg;
     DeserializationError error = deserializeJson(msg, message);
 
     if (error) {
@@ -31,13 +31,17 @@ void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsE
     if (msg["type"] == "ping") {
       client->text(message);    // return ping message to client
     }
-
-    // Extract values from the JSON object
-    //int red = msg["red"];
-    //int green = msg["green"];
-    //int blue = msg["blue"];
-
-    //pixels.setPixelColor(0, pixels.Color(red, green, blue));
-    //pixels.show(); 
   }
+}
+
+
+void sendMeasurements(){
+    int val = analogRead(1);
+  JsonDocument measurement;
+  measurement["type"] = "measurement";
+  measurement["val1"] = val;
+  char output[100] = {};
+  serializeJson(measurement, output);
+
+  ws.textAll(output);
 }

@@ -29,8 +29,7 @@ function onClose(event) {
 
 function onMessage(event) {
     var msg = JSON.parse(event.data)
-    console.log("recieved message: ");
-    console.log(msg)
+    
 
     if (msg.type == "ping") {
         var pingTime = Date.now() - msg.sendTime;
@@ -46,8 +45,15 @@ function onMessage(event) {
             document.getElementById("connection-status").innerHTML = 'Disconnected'
         }
     } 
-    else {
+    else if(msg.type == "measurement") {
+        data1.push([Date.now(), msg.val1])
+    }
+    else if (0) {
         
+    }
+    else{
+        console.log("recieved message: ");
+        console.log(msg)
     }
 }
 
@@ -61,20 +67,11 @@ setInterval(function() {        //Send ping messages
 
 window.onload = function() {
 
-    var canvas = document.getElementById("canvas");
+    var canvas = document.getElementById("map-canvas");
     canvas.width = document.querySelector(".middle").getBoundingClientRect().width - 10
     canvas.height = document.querySelector(".middle").getBoundingClientRect().height - 10
 
-    // Get the sliders container and all input elements within it
-    const slidersContainer = document.getElementById('sliders');
-    const sliders = slidersContainer.getElementsByTagName('input');
 
-
-
-    // Add event listeners to each slider
-    for (let slider of sliders) {
-        slider.addEventListener('mouseup', () => sendSliderValue());
-    }
 };
 
     // Function to send slider value via WebSocket

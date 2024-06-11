@@ -78,7 +78,7 @@ nav a:hover {
     background-color: #1F1F1F;
 }
 
-canvas {
+#map-canvas {
     border: 2px solid #ff9900;
 }
 
@@ -157,3 +157,9 @@ canvas {
     
 }
 
+.dygraph-axis-label{ font-size: 1em; color: rgb(204, 204, 204) }
+
+
+.chart{
+    border: dashed 2px orange;
+}

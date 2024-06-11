@@ -5,14 +5,14 @@
 #include <SPIFFS.h>
 #include <Adafruit_NeoPixel.h>
 #include <ArduinoJson.h>
-#include "websockets.h"
-#include "credentials.h"
+#include <Ticker.h>
+
+
 
 #define PIN 18
 #define NUMPIXELS 1
 
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
-
 
 unsigned long previousMillis = 0;
 const long interval = 500; // 10 seconds
@@ -20,6 +20,14 @@ const long interval = 500; // 10 seconds
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
+
+
+
+#include "websockets.h"
+#include "credentials.h"
+
+Ticker measurement_timer(sendMeasurements, 100, 0, MILLIS);
+
 
 // Handle 404 errors
 void notFound(AsyncWebServerRequest *request) {
@@ -42,6 +50,9 @@ String get_wifi_status(int status){
         return "WL_CONNECTED";
         case WL_DISCONNECTED:
         return "WL_DISCONNECTED";
+
+        default:
+          return "";
     }
 }
 
@@ -106,13 +117,14 @@ void setup(){
   server.begin();
 
   pixels.begin();
+
+
+  measurement_timer.start();
 }
 
 void loop(){
 
-  //  pixels.setPixelColor(0, pixels.Color(0, 150, 0));
-
-    pixels.show(); 
+  measurement_timer.update();
 
   ws.cleanupClients();
 }
