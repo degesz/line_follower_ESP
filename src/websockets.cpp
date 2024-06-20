@@ -35,13 +35,64 @@ void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsE
 }
 
 
-void sendMeasurements(){
-    int val = analogRead(1);
+
+Measurement buffer[BUFFER_SIZE];
+int bufferIndex = 0;
+
+void captureMeasurements(){
+  if (bufferIndex >= BUFFER_SIZE)
+  {
+    Serial.println("Measurement buffer full! Sending JSON");
+    //sendMeasurements_JSON();
+    sendMeasurements_Bin();
+    bufferIndex = 0;
+    return;
+  }
+  
+
+  int val1 = analogRead(1);
+
+  buffer[bufferIndex].current_Total = val1;
+  buffer[bufferIndex].timestamp = millis();
+  
+  // Increment bufferIndex and wrap around if necessary
+  bufferIndex++;
+  return;
+}
+
+
+void sendMeasurements_Bin(){
+
+  ws.binaryAll((uint8_t*)buffer, sizeof(buffer));
+  return ;
+
+}
+/*
+void sendMeasurements_JSON(){
+    
   JsonDocument measurement;
-  measurement["type"] = "measurement";
-  measurement["val1"] = val;
-  char output[100] = {};
-  serializeJson(measurement, output);
+      // Create a JSON document
+    JsonDocument doc; // Adjust the size if necessary
+
+    // Create a JSON array
+    JsonArray array = doc.to<JsonArray>();
+
+    // Populate the JSON array with buffer contents
+    for (int i = 0; i < BUFFER_SIZE; i++) {
+        JsonObject obj = array.add<JsonObject>();
+        obj["IT"] = buffer[i].current_Total;
+        obj["IL"] = buffer[i].current_L;
+        obj["IR"] = buffer[i].current_R;
+        obj["s"] = buffer[i].setpoint;
+        obj["e"] = buffer[i].error;
+        obj["eL"] = buffer[i].encoder_L;
+        obj["eR"] = buffer[i].encoder_R;
+        obj["t"] = buffer[i].timestamp;
+    }
+
+  char output[4096] = {};
+  serializeJson(doc, output);
 
   ws.textAll(output);
-}
+  return ;
+}*/

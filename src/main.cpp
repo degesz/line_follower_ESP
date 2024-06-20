@@ -26,7 +26,8 @@ AsyncWebSocket ws("/ws");
 #include "websockets.h"
 #include "credentials.h"
 
-Ticker measurement_timer(sendMeasurements, 100, 0, MILLIS);
+
+Ticker measurement_timer(captureMeasurements, 1, 0, MILLIS);
 
 
 // Handle 404 errors

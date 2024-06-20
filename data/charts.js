@@ -1,5 +1,8 @@
-var fixedXAxis = {}
+const numFrames = 150
 
+
+
+var measurementBuffer = []
 var data1 = []
 var dataset1 = []
 
@@ -7,7 +10,9 @@ var dataset1 = []
 document.addEventListener("DOMContentLoaded", function() {
     
     
-    var chart1 = new Dygraph(document.getElementById("chart1"), dataset1,
+    var chart1 = new Dygraph(document.getElementById("chart1"), 
+
+    dataset1,
     {
       title: "Motor current",
       drawPoints: true,
@@ -28,15 +33,21 @@ document.addEventListener("DOMContentLoaded", function() {
     
     
     const interval = setInterval(() => {
-        data1.splice(0, data1.length - 50); // Remove the first elements to keep the array length at 200
+        data1.push(...measurementBuffer.slice(0, 10).map(obj => ({
+            timestamp: obj.timestamp,
+            current_Total: obj.current_Total
+          })))
+        measurementBuffer.splice(0, 11)
+        measurementBuffer.splice(numFrames + 10)
+        data1.splice(0, data1.length - 3000); // Remove the first elements to keep the array length
         for (let i = 0; i < data1.length; i++) {
-            dataset1[i] = [(data1[data1.length-1][0] - data1[i][0])/(-1000), data1[i][1]]
+            dataset1[i] = [(data1[data1.length-1].timestamp - data1[i].timestamp)/(-1000), data1[i].current_Total]
         }
 
         chart1.updateOptions({
             'file': dataset1
         })
         
-    }, 16);
+    }, 10);
 });
 
