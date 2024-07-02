@@ -1,5 +1,7 @@
 #include "websockets.h"
 
+
+
 void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
   if (type == WS_EVT_CONNECT) {
     Serial.println("WebSocket client connected");
@@ -42,17 +44,20 @@ int bufferIndex = 0;
 void captureMeasurements(){
   if (bufferIndex >= BUFFER_SIZE)
   {
-    Serial.println("Measurement buffer full! Sending JSON");
+  //  Serial.println("Measurement buffer full! Sending JSON");
     //sendMeasurements_JSON();
     sendMeasurements_Bin();
     bufferIndex = 0;
     return;
   }
   
+  //Serial.print(mag_1.readAngle());
 
   int val1 = analogRead(1);
 
   buffer[bufferIndex].current_Total = val1;
+  buffer[bufferIndex].encoder_L = cumulative_L;
+  buffer[bufferIndex].encoder_R = cumulative_R;
   buffer[bufferIndex].timestamp = millis();
   
   // Increment bufferIndex and wrap around if necessary
@@ -62,11 +67,16 @@ void captureMeasurements(){
 
 
 void sendMeasurements_Bin(){
-
+  Serial.print("sending----");
   ws.binaryAll((uint8_t*)buffer, sizeof(buffer));
+  Serial.println("sent");
   return ;
 
 }
+
+
+
+
 /*
 void sendMeasurements_JSON(){
     

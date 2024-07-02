@@ -1,4 +1,4 @@
-const numFrames = 150
+const numFrames = 100
 
 
 

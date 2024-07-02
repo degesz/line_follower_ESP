@@ -6,28 +6,30 @@
 #include <Adafruit_NeoPixel.h>
 #include <ArduinoJson.h>
 #include <Ticker.h>
+#include <AS5600.h>
 
 
 
 #define PIN 18
 #define NUMPIXELS 1
-
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
-
-unsigned long previousMillis = 0;
-const long interval = 500; // 10 seconds
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
 
+AS5600 encoder;
+
 
 #include "websockets.h"
+#include "encoders.h"
 #include "credentials.h"
 
 
+
 Ticker measurement_timer(captureMeasurements, 1, 0, MILLIS);
+Ticker encoder_timer(updateEncoders, 100, 0, MILLIS);
 
 
 // Handle 404 errors
@@ -120,12 +122,17 @@ void setup(){
   pixels.begin();
 
 
+  initEncoders();
+
+
   measurement_timer.start();
+  encoder_timer.start();
 }
 
 void loop(){
 
   measurement_timer.update();
+  encoder_timer.update();
 
   ws.cleanupClients();
 }
