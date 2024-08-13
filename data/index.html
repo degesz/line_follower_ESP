@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
     <script src="charts.js"></script>
+    <script src="config-script.js"></script>
 
 
 
@@ -27,8 +28,8 @@
                 <span id="config-title">Parameter config</span>
                 <div id="config-control">
                     <input class="config-button" type="button" value="Load" onclick="ws.send(JSON.stringify({type: 'config-request'}))">
-                    <input  class="config-button" type="button" value="Save">
-                    <input  class="config-button" type="button" value="Autosave">
+                    <input  class="config-button" type="button" value="Save" onclick="saveConfig(this.parentNode.parentNode)">
+                    <input  class="config-button" type="button" value="Autosave" onclick="toggleAutosave(this);">
                 </div>
                 <div class="slider-container">
                     <div class="slider-label">

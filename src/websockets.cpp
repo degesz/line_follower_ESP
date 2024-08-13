@@ -9,16 +9,12 @@ void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsE
   } else if (type == WS_EVT_DISCONNECT) {
     Serial.println("WebSocket client disconnected");
   } else if (type == WS_EVT_DATA) {
-    Serial.println("WebSocket data received");
 
     // Convert data to a String
     String message = "";
     for (size_t i = 0; i < len; i++) {
       message += (char) data[i];
     }
-
-    // Print the received message
-    Serial.printf("Received: %s\n", message.c_str());
 
     // Parse the JSON data
     JsonDocument msg;
@@ -33,6 +29,26 @@ void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsE
     if (msg["type"] == "ping") {
       client->text(message);    // return ping message to client
     }
+    else if(msg["type"] == "config-request")
+    {
+      Serial.println("CONFIG REQUEST");
+      params_t loadedParams = readParams();
+      client->printf("{\"type\":\"params\",\"P0\":%d,\"P1\":%d,\"P2\":%d,\"P3\":%d}", loadedParams.P0, loadedParams.P1, loadedParams.P2, loadedParams.P3);
+    }
+    else if(msg["type"] == "config-update")
+    {
+      Serial.println("NEW CONFIG");
+      Serial.printf("Received: %s\n", message.c_str());
+      params_t newParams = {(int)(msg["P0"].as<float>() * 10),(int)(msg["P1"].as<float>() * 10),(int)(msg["P2"].as<float>() * 10),(int)(msg["P3"].as<float>() * 10)};
+      updateParams(newParams);
+
+    }
+    else
+    {
+      Serial.printf("Received: %s\n", message.c_str());
+    }
+    
+    
   }
 }
 
@@ -44,8 +60,6 @@ int bufferIndex = 0;
 void captureMeasurements(){
   if (bufferIndex >= BUFFER_SIZE)
   {
-  //  Serial.println("Measurement buffer full! Sending JSON");
-    //sendMeasurements_JSON();
     sendMeasurements_Bin();
     bufferIndex = 0;
     return;
@@ -67,42 +81,12 @@ void captureMeasurements(){
 
 
 void sendMeasurements_Bin(){
-  Serial.print("sending----");
+//  Serial.print("sending----");
   ws.binaryAll((uint8_t*)buffer, sizeof(buffer));
-  Serial.println("sent");
+//  Serial.println("sent");
   return ;
 
 }
 
 
 
-
-/*
-void sendMeasurements_JSON(){
-    
-  JsonDocument measurement;
-      // Create a JSON document
-    JsonDocument doc; // Adjust the size if necessary
-
-    // Create a JSON array
-    JsonArray array = doc.to<JsonArray>();
-
-    // Populate the JSON array with buffer contents
-    for (int i = 0; i < BUFFER_SIZE; i++) {
-        JsonObject obj = array.add<JsonObject>();
-        obj["IT"] = buffer[i].current_Total;
-        obj["IL"] = buffer[i].current_L;
-        obj["IR"] = buffer[i].current_R;
-        obj["s"] = buffer[i].setpoint;
-        obj["e"] = buffer[i].error;
-        obj["eL"] = buffer[i].encoder_L;
-        obj["eR"] = buffer[i].encoder_R;
-        obj["t"] = buffer[i].timestamp;
-    }
-
-  char output[4096] = {};
-  serializeJson(doc, output);
-
-  ws.textAll(output);
-  return ;
-}*/

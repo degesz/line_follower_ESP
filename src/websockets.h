@@ -7,6 +7,7 @@
 #include <ArduinoJson.h>
 #include <Adafruit_NeoPixel.h>
 
+#include "parameters.h"
 
 extern Adafruit_NeoPixel pixels;
 extern AsyncWebSocket ws;
@@ -14,6 +15,9 @@ extern AsyncWebSocket ws;
 extern int32_t cumulative_R;
 extern int32_t cumulative_L;
 
+
+extern void updateParams(params_t params);
+extern params_t readParams();
 
 
 void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);

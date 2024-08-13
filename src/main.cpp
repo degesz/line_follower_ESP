@@ -7,7 +7,7 @@
 #include <ArduinoJson.h>
 #include <Ticker.h>
 #include <AS5600.h>
-
+#include <Preferences.h>
 
 
 #define PIN 18
@@ -21,10 +21,11 @@ AsyncWebSocket ws("/ws");
 
 AS5600 encoder;
 
-
+#include "parameters.h"
 #include "websockets.h"
 #include "encoders.h"
 #include "credentials.h"
+
 
 
 
@@ -75,6 +76,8 @@ void setup(){
     Serial.println("\nConnected to the WiFi network");
     Serial.print("Local ESP32 IP: ");
     Serial.println(WiFi.localIP());
+
+    paramsBegin();
 
 
      //Initialize SPIFFS

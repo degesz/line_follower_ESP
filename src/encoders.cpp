@@ -46,9 +46,7 @@ void updateEncoders(){
     cumulative_R += diff;
     prevAngle_R = currentAngle;
 
-  Serial.print("Free heap: ");
-  Serial.print(esp_get_free_heap_size());
-    Serial.printf("   Enc: L %d    R %d \n", cumulative_L, cumulative_R);
+//    Serial.printf("   Enc: L %d    R %d \n", cumulative_L, cumulative_R);
     return;
 
 

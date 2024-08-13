@@ -149,13 +149,21 @@ nav a:hover {
 .config-button:hover{
     background-color: #71b309;
     transition: 0.3s;
-    
 }
+
 .config-button:active{
     background-color: #eaee11;
-    transition: 0.1s;
-    
+    transition: 0.1s; 
 }
+.forced-active { /* for toggle button */
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    font-size: 1.2em;
+    border-radius: 1em;
+    border: 2px solid black;
+    background-color: #eaee11;
+    transition: 0.1s; 
+  }
 
 .dygraph-axis-label{ font-size: 1em; color: rgb(204, 204, 204) }
 

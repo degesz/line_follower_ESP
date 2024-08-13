@@ -1,6 +1,6 @@
 var gateway = `ws://${window.location.hostname}/ws`;
 var ws;
-
+var autosaveActive = false;
 window.addEventListener('load', onLoad);
 
 function onLoad(event) {
@@ -46,6 +46,18 @@ function onMessage(event) {
                 }
             } 
 
+            else if (msg.type == "params"){
+                var configContainer = document.getElementById("config-panel")
+                configContainer.querySelectorAll('.config-slider')[0].value = msg.P0 / 10.0
+                configContainer.querySelectorAll('.config-slider')[1].value = msg.P1 / 10.0
+                configContainer.querySelectorAll('.config-slider')[2].value = msg.P2 / 10.0
+                configContainer.querySelectorAll('.config-slider')[3].value = msg.P3 / 10.0
+                updateSlider(configContainer.querySelectorAll('.config-slider')[0])
+                updateSlider(configContainer.querySelectorAll('.config-slider')[1])
+                updateSlider(configContainer.querySelectorAll('.config-slider')[2])
+                updateSlider(configContainer.querySelectorAll('.config-slider')[3])
+            }
+
             else{
                 console.log("recieved message: ");
                 console.log(msg)
@@ -73,6 +85,11 @@ setInterval(function() {        //Send ping messages
         type: "ping",
         sendTime: Date.now(),
     }))
+
+    if (autosaveActive) {
+        saveConfig(document.getElementById("config-panel"))
+    }
+
   }, 500);
 
 
@@ -85,33 +102,8 @@ window.onload = function() {
 
 };
 
-    // Function to send slider value via WebSocket
-    function sendSliderValue() {
-        if (ws.readyState === WebSocket.OPEN) {
-            sliderData = {
-                name: "color sliders",
-              
-            };
-            sliderData.red = document.getElementById("redSlider").value;
-            sliderData.green = document.getElementById("greenSlider").value;
-            sliderData.blue = document.getElementById("blueSlider").value;
-            
-            
-            ws.send(JSON.stringify(sliderData));
-        }
-    }
 
 
-document.querySelectorAll('.slider').forEach(slider => {
-    slider.addEventListener('input', (event) => {
-        var valueDisplay = event.target.parentElement.querySelector('.slider-value');
-        valueDisplay.textContent = event.target.value;
-    });
-});
-
-function updateSlider(slider){
-    slider.parentElement.querySelector('.slider-value').textContent = slider.value
-}
 
 
 function parseMeasurements(buffer) {
@@ -136,4 +128,11 @@ function parseMeasurements(buffer) {
     }
 
     return measurements;
+}
+
+
+function toggleAutosave(button) {
+    button.classList.toggle('forced-active')
+    button.classList.toggle('config-button')
+    autosaveActive = !autosaveActive
 }
