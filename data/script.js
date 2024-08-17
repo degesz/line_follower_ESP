@@ -102,10 +102,6 @@ window.onload = function() {
 
 };
 
-
-
-
-
 function parseMeasurements(buffer) {
     const measurements = [];
     const dataView = new DataView(buffer);
@@ -119,7 +115,7 @@ function parseMeasurements(buffer) {
             current_R: dataView.getInt16(offset + 2, true),
             current_Total: dataView.getInt16(offset + 4, true),
             setpoint: dataView.getInt16(offset + 6, true),
-            error: dataView.getInt16(offset + 8, true),
+            input: dataView.getInt16(offset + 8, true),
             encoder_L: dataView.getUint32(offset + 10, true),
             encoder_R: dataView.getUint32(offset + 14, true),
             timestamp: dataView.getUint32(offset + 18, true)

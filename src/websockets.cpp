@@ -65,11 +65,18 @@ void captureMeasurements(){
     return;
   }
   
-  //Serial.print(mag_1.readAngle());
 
-  int val1 = analogRead(1);
+  int curr_L = analogRead(13);
+  int curr_R = analogRead(14);
 
-  buffer[bufferIndex].current_Total = val1;
+  buffer[bufferIndex].current_L = curr_L;
+  buffer[bufferIndex].current_R = curr_R;
+
+  buffer[bufferIndex].current_Total = curr_L + curr_R;    // total current sensor not implemented :(
+
+  buffer[bufferIndex].setpoint = (int)Setpoint * 10;
+  buffer[bufferIndex].input = (int)Input * 10;
+
   buffer[bufferIndex].encoder_L = cumulative_L;
   buffer[bufferIndex].encoder_R = cumulative_R;
   buffer[bufferIndex].timestamp = millis();

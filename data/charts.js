@@ -17,9 +17,10 @@ document.addEventListener("DOMContentLoaded", function() {
       title: "Motor current",
       drawPoints: true,
       valueRange: [0, 8192],
-      labels: ['Time', 'Current'],
+      labels: ['Time', 'Current L', 'Current R'],
       showRoller: false,
-      colors: ['#ff0000'],
+      showLabelsOnHighlight: false,
+      colors: ['#ff9a00', '#27a7d7'],
       gridLineColor: ['#DDDDDD'],
       axisLineColor: ['#FFFFFF'],
       axisLineWidth : 1,
@@ -35,13 +36,14 @@ document.addEventListener("DOMContentLoaded", function() {
     const interval = setInterval(() => {
         data1.push(...measurementBuffer.slice(0, 10).map(obj => ({
             timestamp: obj.timestamp,
-            current_Total: obj.current_Total
+            current_L: obj.current_L,
+            current_R: obj.current_R
           })))
         measurementBuffer.splice(0, 11)
         measurementBuffer.splice(numFrames + 10)
         data1.splice(0, data1.length - 3000); // Remove the first elements to keep the array length
         for (let i = 0; i < data1.length; i++) {
-            dataset1[i] = [(data1[data1.length-1].timestamp - data1[i].timestamp)/(-1000), data1[i].current_Total]
+            dataset1[i] = [(data1[data1.length-1].timestamp - data1[i].timestamp)/(-1000), data1[i].current_L, data1[i].current_R]
         }
 
         chart1.updateOptions({

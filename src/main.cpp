@@ -7,6 +7,7 @@
 #include <ArduinoJson.h>
 #include <Ticker.h>
 #include <AS5600.h>
+#include <PID_v1.h>
 #include <Preferences.h>
 
 
@@ -25,13 +26,14 @@ AS5600 encoder;
 #include "websockets.h"
 #include "encoders.h"
 #include "credentials.h"
-
+#include "control_loop.h"
+#include "RGBleds.h"
 
 
 
 Ticker measurement_timer(captureMeasurements, 1, 0, MILLIS);
 Ticker encoder_timer(updateEncoders, 100, 0, MILLIS);
-
+Ticker control_loop_timer(controlLoop, 10, 0, MILLIS);
 
 // Handle 404 errors
 void notFound(AsyncWebServerRequest *request) {
@@ -121,21 +123,23 @@ void setup(){
 
   // Start server
   server.begin();
-
+  setup_controlLoop();
   pixels.begin();
 
 
   initEncoders();
 
 
-  measurement_timer.start();
   encoder_timer.start();
+  control_loop_timer.start();
+  measurement_timer.start();
 }
 
 void loop(){
 
-  measurement_timer.update();
   encoder_timer.update();
+  control_loop_timer.update();
+  measurement_timer.update();
 
   ws.cleanupClients();
 }

@@ -18,6 +18,7 @@ extern int32_t cumulative_L;
 
 extern void updateParams(params_t params);
 extern params_t readParams();
+extern double Setpoint, Input;
 
 
 void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);
@@ -32,7 +33,7 @@ struct __attribute__((packed)) Measurement {
     int16_t current_R;
     int16_t current_Total;
     int16_t setpoint;
-    int16_t error;
+    int16_t input;
     uint32_t encoder_L;
     uint32_t encoder_R;
     uint32_t timestamp; // Store the time when the measurement was taken
