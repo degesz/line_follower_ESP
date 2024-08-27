@@ -122,6 +122,14 @@ nav a:hover {
     border: 2px dashed orange;
     padding-top: 1em;
     padding-bottom: 1em;
+    margin-top: 0.1em;
+}
+
+#controller-container{
+    border: 2px dashed orange;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    margin-top: 0.1em;
 }
 
 #config-title{
@@ -140,14 +148,14 @@ nav a:hover {
     padding-left: 0.5em;
     padding-right: 0.5em;
     font-size: 1.2em;
-    background-color: #c7ff6c;
+    background-color:#71b309 ;
     border-radius: 1em;
     border: 2px solid black;
     
 }
 
 .config-button:hover{
-    background-color: #71b309;
+    background-color: #c7ff6c;
     transition: 0.3s;
 }
 
@@ -170,4 +178,17 @@ nav a:hover {
 
 .chart{
     border: dashed 2px orange;
+    margin-top: 0.1em;
+}
+
+#reset-button{
+    background-color:#000000 ;
+    border: 1px solid red;
+    color: red;
+    display: inline;
+    font-size: 1.5em;
+    margin-left: 25px;
+    padding-left: 1em;
+    padding-right: 1em;
+    border-radius: 0.7em;
 }

@@ -105,7 +105,7 @@ window.onload = function() {
 function parseMeasurements(buffer) {
     const measurements = [];
     const dataView = new DataView(buffer);
-    const structSize = 2 * 5 + 4 * 3; // 5 int16_t (2 bytes each) + 3 uint32_t (4 bytes each)
+    const structSize = 2 * 6 + 4 * 3; // 6 int16_t (2 bytes each) + 3 uint32_t (4 bytes each)
     const numMeasurements = numFrames;
 
     for (let i = 0; i < numMeasurements; i++) {
@@ -118,7 +118,8 @@ function parseMeasurements(buffer) {
             input: dataView.getInt16(offset + 8, true),
             encoder_L: dataView.getUint32(offset + 10, true),
             encoder_R: dataView.getUint32(offset + 14, true),
-            timestamp: dataView.getUint32(offset + 18, true)
+            timestamp: dataView.getUint32(offset + 18, true),
+            output: dataView.getInt16(offset + 22, true),
         };
         measurements.push(measurement);
     }

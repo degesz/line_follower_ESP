@@ -6,11 +6,14 @@
     <script type="text/javascript" src="https://unpkg.com/dygraphs@2.2.1/dist/dygraph.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/dygraphs@2.2.1/dist/dygraph.min.css" />
 
+    <script src="joy.min.js"></script>
 
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
     <script src="charts.js"></script>
     <script src="config-script.js"></script>
+    <script src="control.js"></script>
+
 
 
 
@@ -19,6 +22,7 @@
     <div class="header">
         <h1 style=" margin-left: 1em; margin-right: 1em; display: inline;">Line Follower - Control Panel</h1>
         <div class="disconnected" id="connection-status">Disconnected</div>
+        <input id="reset-button" type="button" value="Reset" onclick="ws.send(JSON.stringify({type: 'RESET'}));">
     </div>
     
 
@@ -67,11 +71,35 @@
                 </div>
                 
             </div>
+
+            <div id="controller-container">
+                <span id="config-title">Remote control</span>
+                <input class="config-button" style="left: 25px; font-size: 1.5em;" type="button" value="Override control" onclick="toggleControl(this);">
+                <div id="controller" >
+                    <div style="margin-top: 0.6em;" id="config-control">
+                        <input  class="config-button" type="button" value="Cal line" onclick="ws.send(JSON.stringify({type: 'CAL-LINE'}) )">
+                        <input  class="config-button" type="button" value="Cal turn" onclick="ws.send(JSON.stringify({type: 'CAL-TURN'}))">
+                    </div>
+                    
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span class="slider-name">Manual speed</span>
+                            <span style="color: #b30cd4;" class="slider-value">3</span>
+                            <input id="manual-speed" type="range" min="0" max="10" step="1" value="3" class="config-slider" oninput="updateSlider(this)" >
+                        </div>
+                    </div>
+                    
+                    <div id="joyDiv" style="position: relative;  left: 25%; width:250px ; height:250px; margin-top:1em;"></div>
+                    <span id="joyX"></span> &nbsp;&nbsp; &nbsp; <span id="joyY"></span>
+                </div>
+
+            </div>
         </div>
         <div class="column middle">
             <canvas  id="map-canvas"></canvas>
         </div>
         <div class="column right">
+            <div class="chart" id="chart0"></div>
             <div class="chart" id="chart1"></div>
         </div>
     </div>

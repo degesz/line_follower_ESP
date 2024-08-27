@@ -18,7 +18,7 @@ extern int32_t cumulative_L;
 
 extern void updateParams(params_t params);
 extern params_t readParams();
-extern double Setpoint, Input;
+extern double Setpoint, Input, Output;
 
 
 void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);
@@ -37,6 +37,7 @@ struct __attribute__((packed)) Measurement {
     uint32_t encoder_L;
     uint32_t encoder_R;
     uint32_t timestamp; // Store the time when the measurement was taken
+    uint16_t output;
 };
 
 const int BUFFER_SIZE = 100;

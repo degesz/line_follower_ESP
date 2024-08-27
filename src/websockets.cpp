@@ -41,18 +41,40 @@ void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsE
       Serial.printf("Received: %s\n", message.c_str());
       params_t newParams = {(int)(msg["P0"].as<float>() * 10),(int)(msg["P1"].as<float>() * 10),(int)(msg["P2"].as<float>() * 10),(int)(msg["P3"].as<float>() * 10)};
       updateParams(newParams);
-
     }
+    else if (msg["type"] == "AUTO_CONTROL")
+    {
+      /* code */
+    }
+    else if (msg["type"] == "MANUAL_CONTROL")
+    {
+      /* code */
+    }
+    else if (msg["type"] == "CONTROL_DATA")
+    {
+      /* code */
+    }
+    else if (msg["type"] == "CAL_LINE")
+    {
+      /* code */
+    }
+    else if (msg["type"] == "CAL_TURN")
+    {
+      /* code */
+    }
+    else if (msg["type"] == "RESET")
+    {
+      Serial.println("Resetting on command...");
+      ESP.restart();
+    }
+
     else
     {
       Serial.printf("Received: %s\n", message.c_str());
     }
     
-    
   }
 }
-
-
 
 Measurement buffer[BUFFER_SIZE];
 int bufferIndex = 0;
@@ -64,7 +86,6 @@ void captureMeasurements(){
     bufferIndex = 0;
     return;
   }
-  
 
   int curr_L = analogRead(13);
   int curr_R = analogRead(14);
@@ -76,6 +97,7 @@ void captureMeasurements(){
 
   buffer[bufferIndex].setpoint = (int)Setpoint * 10;
   buffer[bufferIndex].input = (int)Input * 10;
+  buffer[bufferIndex].output = (int)Output * 10;
 
   buffer[bufferIndex].encoder_L = cumulative_L;
   buffer[bufferIndex].encoder_R = cumulative_R;
