@@ -63,8 +63,8 @@ String get_wifi_status(int status){
 }
 
 void setup(){
-    Serial.begin(115200);
-    delay(10);
+    Serial.begin(921600);
+    delay(4000);
     int status = WL_IDLE_STATUS;
     Serial.println("\nConnecting");
    // Serial.println(get_wifi_status(status));

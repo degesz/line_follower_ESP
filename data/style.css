@@ -80,6 +80,9 @@ nav a:hover {
 
 #map-canvas {
     border: 2px solid #ff9900;
+    width: 98%;
+    height: 100%;
+    shape-rendering: crispEdges;
 }
 
 .slider-label {

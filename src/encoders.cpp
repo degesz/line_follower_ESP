@@ -10,7 +10,7 @@ void updateEncoders(){
     int diff = 0;
     int currentAngle = 0;
 
-    digitalWrite(ENCODER_SWITCH_PIN, HIGH);
+    digitalWrite(ENCODER_SWITCH_PIN, LOW);
     currentAngle = encoder.readAngle();
     diff = prevAngle_L - currentAngle ;
     if (diff < -3000  || diff > 3000 )
@@ -28,7 +28,7 @@ void updateEncoders(){
     cumulative_L += diff;
     prevAngle_L = currentAngle;
 
-    digitalWrite(ENCODER_SWITCH_PIN, LOW);
+    digitalWrite(ENCODER_SWITCH_PIN, HIGH);
     currentAngle = encoder.readAngle();
     diff = prevAngle_R - currentAngle ;
     if (diff < -3000  || diff > 3000 )
@@ -43,10 +43,10 @@ void updateEncoders(){
             diff -= 4096;
         }
     }
-    cumulative_R += diff;
+    cumulative_R -= diff;
     prevAngle_R = currentAngle;
 
-//    Serial.printf("   Enc: L %d    R %d \n", cumulative_L, cumulative_R);
+    Serial.printf("   Enc: L %d    R %d \n", cumulative_L, cumulative_R);
     return;
 
 

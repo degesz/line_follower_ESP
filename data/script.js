@@ -1,4 +1,7 @@
 var gateway = `ws://${window.location.hostname}/ws`;
+////////////////////////////////////////////////////////////TEMPORARY
+console.warn('TEMPORARY WS IP')
+gateway = `ws://192.168.1.163/ws`
 var ws;
 var autosaveActive = false;
 window.addEventListener('load', onLoad);
@@ -68,12 +71,10 @@ function onMessage(event) {
         }
     } 
     else {
-        //console.log('Received unknown type of data:', event.data);
         var reader = new FileReader();
         reader.onload = function() {
-          //  console.log(reader.result)
-            //console.log(parseMeasurements(reader.result))
             measurementBuffer.push(...parseMeasurements(reader.result))
+            updateEncoders(measurementBuffer[measurementBuffer.length - 1])
         }
         reader.readAsArrayBuffer(event.data)
     }
@@ -116,8 +117,8 @@ function parseMeasurements(buffer) {
             current_Total: dataView.getInt16(offset + 4, true),
             setpoint: dataView.getInt16(offset + 6, true),
             input: dataView.getInt16(offset + 8, true),
-            encoder_L: dataView.getUint32(offset + 10, true),
-            encoder_R: dataView.getUint32(offset + 14, true),
+            encoder_L: dataView.getInt32(offset + 10, true),
+            encoder_R: dataView.getInt32(offset + 14, true),
             timestamp: dataView.getUint32(offset + 18, true),
             output: dataView.getInt16(offset + 22, true),
         };
