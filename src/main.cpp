@@ -1,5 +1,7 @@
 #include <Arduino.h>
 #include <WiFi.h>
+#include <WiFiUdp.h>
+#include <ArduinoOTA.h>
 #include <ESPAsyncWebServer.h>
 #include <AsyncTCP.h>
 #include <SPIFFS.h>
@@ -10,10 +12,6 @@
 #include <PID_v1.h>
 #include <Preferences.h>
 
-
-#define PIN 18
-#define NUMPIXELS 1
-Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -28,12 +26,14 @@ AS5600 encoder;
 #include "credentials.h"
 #include "control_loop.h"
 #include "RGBleds.h"
+#include "motor_control.h"
 
 
 
 Ticker measurement_timer(captureMeasurements, 1, 0, MILLIS);
 Ticker encoder_timer(updateEncoders, 100, 0, MILLIS);
 Ticker control_loop_timer(controlLoop, 10, 0, MILLIS);
+Ticker LEDs_timer(LEDs_update, 40, 0, MILLIS);
 
 // Handle 404 errors
 void notFound(AsyncWebServerRequest *request) {
@@ -64,7 +64,9 @@ String get_wifi_status(int status){
 
 void setup(){
     Serial.begin(921600);
-    delay(4000);
+    Serial.setDebugOutput(true);  // sends all log_e(), log_i() messages to USB HW CDC
+    Serial.setTxTimeoutMs(0);       // sets no timeout when trying to write to USB HW CDC
+  //  delay(4000);
     int status = WL_IDLE_STATUS;
     Serial.println("\nConnecting");
    // Serial.println(get_wifi_status(status));
@@ -121,11 +123,48 @@ void setup(){
   ws.onEvent(onWebSocketEvent);
   server.addHandler(&ws);
 
+      ArduinoOTA.onStart([]() {
+        String type;
+        if (ArduinoOTA.getCommand() == U_FLASH) {
+            type = "sketch";
+        } else {  // U_SPIFFS
+            type = "filesystem";
+        }
+        // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+        Serial.println("Start updating " + type);
+    });
+    
+    ArduinoOTA.onEnd([]() {
+        Serial.println("\nEnd");
+    });
+
+    ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+        Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+    });
+
+    ArduinoOTA.onError([](ota_error_t error) {
+        Serial.printf("Error[%u]: ", error);
+        if (error == OTA_AUTH_ERROR) {
+            Serial.println("OTA Auth Failed");
+        } else if (error == OTA_BEGIN_ERROR) {
+            Serial.println("OTA Begin Failed");
+        } else if (error == OTA_CONNECT_ERROR) {
+            Serial.println("OTA Connect Failed");
+        } else if (error == OTA_RECEIVE_ERROR) {
+            Serial.println("OTA Receive Failed");
+        } else if (error == OTA_END_ERROR) {
+            Serial.println("OTA End Failed");
+        }
+    });
+
+    ArduinoOTA.begin();
+
+
   // Start server
   server.begin();
   setup_controlLoop();
-  pixels.begin();
-
+  LEDs_setup();
+  motor_setup();
 
   initEncoders();
 
@@ -133,6 +172,7 @@ void setup(){
   encoder_timer.start();
   control_loop_timer.start();
   measurement_timer.start();
+  LEDs_timer.start();
 }
 
 void loop(){
@@ -140,6 +180,8 @@ void loop(){
   encoder_timer.update();
   control_loop_timer.update();
   measurement_timer.update();
+  LEDs_timer.update();
 
   ws.cleanupClients();
+  ArduinoOTA.handle();
 }

@@ -13,6 +13,11 @@ function toggleControl(button) {
 }
 
 setInterval(() => {
+    sendControlData();
+  }, 100);
+
+
+function sendControlData() {
     if (controlActive) {
         speed = document.getElementById('manual-speed').value;
 
@@ -23,7 +28,7 @@ setInterval(() => {
             manualSpeed: speed 
         }))
     }
-  }, 100);
+}
 
 var joyX, joyY;
 var speed;
@@ -46,6 +51,7 @@ document.addEventListener('keydown', function(event) {
         }
         document.getElementById('joyX').innerText = joyX
         document.getElementById('joyY').innerText = joyY
+        sendControlData();
     }
 
 });
@@ -64,6 +70,7 @@ document.addEventListener('keyup', function(event) {
         }
         document.getElementById('joyX').innerText = joyX
         document.getElementById('joyY').innerText = joyY
+        sendControlData();
     }
 
 });

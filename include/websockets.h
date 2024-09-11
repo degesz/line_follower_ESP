@@ -6,7 +6,8 @@
 #include <AsyncTCP.h>
 #include <ArduinoJson.h>
 #include <Adafruit_NeoPixel.h>
-
+#include "motor_control.h"
+#include "control_loop.h"
 #include "parameters.h"
 
 extern Adafruit_NeoPixel pixels;
@@ -20,6 +21,8 @@ extern void updateParams(params_t params);
 extern params_t readParams();
 extern double Setpoint, Input, Output;
 
+extern int operationMode;
+extern int manual_Joy_X, manual_Joy_Y;
 
 void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);
 void sendMeasurements_JSON();

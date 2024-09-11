@@ -19,6 +19,7 @@ void updateParams(params_t params) {
     if (prefs_storage.begin("line-follower", false)) {  // Ensure successful initialization
         prefs_storage.putBytes("params", &params, sizeof(params_t));
          Serial.printf("Updated parameters in storage: \n P0: %d   P1: %d   P2: %d  P3: %d \n", params.P0 , params.P1, params.P2, params.P3);
+        savedParams = params;
         prefs_storage.end();  // End the preferences
     } else {
         Serial.println("Failed to initialize preferences storage.");

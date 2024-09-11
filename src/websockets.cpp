@@ -44,23 +44,31 @@ void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsE
     }
     else if (msg["type"] == "AUTO_CONTROL")
     {
-      /* code */
+      operationMode = 0;
+      Serial.println("Auto operation mode 0 set");
     }
     else if (msg["type"] == "MANUAL_CONTROL")
     {
-      /* code */
+      operationMode = 1;
+      Serial.println("Manual operation mode 1 set");
     }
     else if (msg["type"] == "CONTROL_DATA")
     {
-      /* code */
+      manual_Joy_X = msg["joyX"] ;
+      manual_Joy_Y = msg["joyY"] ;
+      float manualSpeed =  msg["manualSpeed"];
+      manual_Joy_X *= (manualSpeed / 10);
+      manual_Joy_Y *= (manualSpeed / 10);
     }
-    else if (msg["type"] == "CAL_LINE")
+    else if (msg["type"] == "CAL-LINE")
     {
       /* code */
+      Serial.println("Line calibration command");
     }
-    else if (msg["type"] == "CAL_TURN")
+    else if (msg["type"] == "CAL-TURN")
     {
       /* code */
+      Serial.println("Turn calibration command");
     }
     else if (msg["type"] == "RESET")
     {
