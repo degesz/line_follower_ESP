@@ -12,7 +12,7 @@ void motor_setup(){
 
     // Configure MCPWM for unit 0 (pins 10, 11)
     mcpwm_config_t pwm_config_1;
-    pwm_config_1.frequency = 1000;               // 1kHz frequency
+    pwm_config_1.frequency = 440;               // 1kHz frequency
     pwm_config_1.cmpr_a = 50.0;                   // Initial duty cycle of 50% for PWM A
     pwm_config_1.cmpr_b = 50.0;                   // Initial duty cycle of 50% for PWM B
     pwm_config_1.counter_mode = MCPWM_UP_COUNTER; // Count up mode
@@ -22,7 +22,7 @@ void motor_setup(){
 
     // Configure MCPWM for unit 1 (pins 21, 47)
     mcpwm_config_t pwm_config_2;
-    pwm_config_2.frequency = 1000;               // 1kHz frequency
+    pwm_config_2.frequency = 440;               // 1kHz frequency
     pwm_config_2.cmpr_a = 50.0;                   // Initial duty cycle of 50% for PWM A
     pwm_config_2.cmpr_b = 50.0;                   // Initial duty cycle of 50% for PWM B
     pwm_config_2.counter_mode = MCPWM_UP_COUNTER; // Count up mode

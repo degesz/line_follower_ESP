@@ -62,14 +62,23 @@ String get_wifi_status(int status){
     }
 }
 
+IPAddress local_IP(192, 168, 1, 163);  // Define your desired IP
+IPAddress gateway(192, 168, 1, 1);     // Typically your router's IP address
+IPAddress subnet(255, 255, 255, 0);    // Subnet mask
+IPAddress primaryDNS(8, 8, 8, 8);      // Optional: Use Google's DNS
+IPAddress secondaryDNS(8, 8, 4, 4);    // Optional: Use Google's secondary DNS
+
 void setup(){
     Serial.begin(921600);
     Serial.setDebugOutput(true);  // sends all log_e(), log_i() messages to USB HW CDC
     Serial.setTxTimeoutMs(0);       // sets no timeout when trying to write to USB HW CDC
-  //  delay(4000);
+    delay(3000);
     int status = WL_IDLE_STATUS;
     Serial.println("\nConnecting");
    // Serial.println(get_wifi_status(status));
+    if (!WiFi.config(local_IP, gateway, subnet, primaryDNS, secondaryDNS)) {
+    Serial.println("STA Failed to configure");
+  }
     WiFi.begin(ssid, password);
     while(status != WL_CONNECTED){
         delay(500);
