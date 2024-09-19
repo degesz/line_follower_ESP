@@ -18,48 +18,41 @@ let startX, startY;
 let isPanning = false;
 
   const robot_img = new Image();
-  robot_img.src = 'graphics/robot_icon.svg';
+  robot_img.src = 'robot_icon.svg';
+
   
-  robot_img.onload = function() {
-      draw()
-
-    }
-
-    var i = 0;
-    setInterval(() => {
-        i++
-        draw(i) ;
-    }, 16);
-
-
-
-    function draw() {
-      ctx.save();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-      // Apply transformations
-      ctx.translate(offsetX, offsetY);
-      ctx.scale(scale, scale);
+ // robot_img.onload = function() {
+ //     draw()
+ //   }
 
-      drawRobot(500, 500, i)
-      ctx.restore();
 
-        
-        
-    }
+ window.draw = function() {
+  ctx.save();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    function drawRobot(posX, posY, angle, state){
-      var pivotY = 60  ;
-      ctx.save();
-      ctx.translate(posX, posY);
-      ctx.translate(0, pivotY)   /// change pivot to point between wheels
-      ctx.rotate(angle* (Math.PI / 180));
-      ctx.translate(0, -pivotY)   /// change pivot back
-      ctx.scale(0.2, 0.2);
-      ctx.drawImage(robot_img, -robot_img.width / 2, -robot_img.height / 2);// Draw the image, centering it at the position
-      
-      ctx.restore();// Restore the canvas to its original state
-    }
+  // Apply transformations
+  ctx.translate(offsetX, offsetY);
+  ctx.scale(scale, scale);
+  drawRobot(old_X, old_Y, old_angle)
+  ctx.restore();
+    
+    
+}
+function drawRobot(posX, posY, angle, state){
+  var pivotY = 60 ;
+  ctx.save();
+  ctx.translate(posX, posY);
+  ctx.translate(0, pivotY)   /// change pivot to point between wheels
+  ctx.rotate(angle + Math.PI/2);
+  ctx.translate(0, -pivotY)   /// change pivot back
+  ctx.scale(0.2, 0.2);
+  ctx.fillStyle = "gold"
+  //ctx.fillRect(0, 0, 50, 1000)
+  ctx.drawImage(robot_img, -robot_img.width / 2, -robot_img.height / 2);// Draw the image, centering it at the position
+  
+  ctx.restore();// Restore the canvas to its original state
+}
   
 
 
@@ -127,46 +120,32 @@ function updateEncoders(measurement_frame) {
   if (Math.abs(diff_L) < 5  &&  Math.abs(diff_R) < 5) {
     return;  // if change in encoder is below noise floor, do nothing
   }
-  findPivot(diff_R, diff_L)
+  findRobotPosRot(diff_R, diff_L)
   //console.log('DIFF:   R: ' + diff_R + '    L: ' + diff_L)
+  draw()
 }
 
-function findPivot(diff_R, diff_L) {
+var old_X = 1000, old_Y = 1600, old_angle = -Math.PI/2;
+
+function findRobotPosRot(diff_R, diff_L){
+  if (isNaN(diff_L)|| isNaN(diff_R)) { // sometimes this gets called with NaN which fucks up  everything
+    return;
+  }
   // convert encoder increments to mm
-  // 4096 = 1 magnet rev = 2.13 wheel rev       2.13 * 122 = ~260mm     measure more precisely!!!
-  //260 / 4096 = 0.06348 mm per encoder increment
+  // 4096 = 1 magnet rev = 2.13 wheel rev     122 / 2.13  = ~57.27mm     measure more precisely!!!
+  //57.27 / 4096 = 0.01398 mm per encoder increment
 
-  var dist_R = diff_R * 0.06348
-  var dist_L = diff_L * 0.06348
+  var dist_R = diff_R * 0.01398
+  var dist_L = diff_L * 0.01398
 
-  var radius_R = Math.abs(dist_R / 6.283185)  //2pi, cant have negative radius
-  var radius_L = Math.abs(dist_L / 6.283185)  
+    // Calculate average distance traveled
+    var avg_dist = (dist_R + dist_L) / 2;
 
-  if (diff_L == diff_R) {   // going straight
-    
-  }
-  else if (diff_L >= -5 && diff_R >= -5 && diff_L > diff_R) {  // pivot right of wheels, going forward
-    console.log('right of wheels, going forward')
-  }
-  else if (diff_L >= -5 && diff_R >= -5 && diff_L < diff_R) { // pivot left of wheels, going forward
-    console.log('left of wheels, going forward')
-  }
-  else if (diff_L <= 5 && diff_R <= 5 && diff_L < diff_R) {  // pivot right of wheels, going backward
-    console.log('right of wheels, going backward')
-  }
-  else if (diff_L <= 5 && diff_R <= 5 && diff_L > diff_R) { // pivot left of wheels, going backward
-    console.log('left of wheels, going back')
-  }
-//  else if (diff_L >= -5 && diff_R <= 5 && Math.abs(diff_L) > Math.abs(diff_R)) {  // pivot between wheels on right side, going forward
-//    console.log('between wheels on right side, going forward')
-//  }
-//  else if (diff_L <= 5 && diff_R >= -5 && Math.abs(diff_L) < Math.abs(diff_R)) { // pivot between wheels on left side, going backward
-//    console.log('between wheels on left side, going backward')
-//  }
-//  else if (diff_L <= 5 && diff_R >= -5 && Math.abs(diff_L) > Math.abs(diff_R)) { // pivot between wheels on right side, going backward
-//    console.log('between wheels on right side, going backward')
-//  }
-//  else if (diff_L <= 5 && diff_R >= -5 && Math.abs(diff_L) > Math.abs(diff_R)) { // pivot between wheels on left side, going forward
-//    console.log('between wheels on left side, going forward')
-//  }
+    // Calculate change in angle
+    var delta_theta = (dist_R - dist_L) / (-120); // Replace wheel_base with the actual wheel base of your robot
+  
+    // Update position and angle
+    old_X += avg_dist * Math.cos(old_angle + delta_theta / 2);
+    old_Y += avg_dist * Math.sin(old_angle + delta_theta / 2);
+    old_angle += delta_theta;
 }

@@ -40,7 +40,7 @@ struct __attribute__((packed)) Measurement {
     uint32_t encoder_L;
     uint32_t encoder_R;
     uint32_t timestamp; // Store the time when the measurement was taken
-    uint16_t output;
+    int16_t output;
 };
 
 const int BUFFER_SIZE = 100;

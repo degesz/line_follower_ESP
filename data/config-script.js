@@ -11,6 +11,7 @@ function saveConfig(configContainer) {
            P1: configContainer.querySelectorAll('.config-slider')[1].value,
            P2: configContainer.querySelectorAll('.config-slider')[2].value,
            P3: configContainer.querySelectorAll('.config-slider')[3].value,
+           P4: configContainer.querySelectorAll('.config-slider')[4].value,
 
        };
 

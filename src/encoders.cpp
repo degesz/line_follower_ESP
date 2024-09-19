@@ -54,7 +54,7 @@ void updateEncoders(){
     cumulative_R -= diff;
     prevAngle_R = currentAngle;
 
-    Serial.printf("   Enc: L %d    R %d \n", cumulative_L, cumulative_R);
+   // Serial.printf("   Enc: L %d    R %d \n", cumulative_L, cumulative_R);
     return;
 
 

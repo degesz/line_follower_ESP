@@ -1,7 +1,7 @@
 #include "control_loop.h"
 
 double Setpoint = 16, Input, Output;
-double Kp = 0, Ki = 0, Kd = 0;
+double Kp = 2, Ki = 0, Kd = 0;
 
 PID pid(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
@@ -16,6 +16,7 @@ void setup_controlLoop(){
   pinMode(shiftDataPin, INPUT);
     
   pid.SetTunings(Kp, Ki, Kd);//apply PID gains
+  pid.SetOutputLimits(-16, 16);
   pid.SetMode(AUTOMATIC);//turn the PID on
 }
 
@@ -46,10 +47,10 @@ digitalWrite(parallelLoadPin, LOW);
 // GPIO.out_w1tc = (1 << parallelloadPin);
 
 
-/////for (int i = 0; i < 32; i++) {
-/////    Serial.print(sensorBits[i] ? "■" : " ");
-/////  }
-/////Serial.println();  // Final newline after all bits are printed
+//for (int i = 0; i < 32; i++) {
+//    Serial.print(sensorBits[i] ? "■" : " ");
+//  }
+//Serial.println();  // Final newline after all bits are printed
 
     ///////////PROCESSING
 byte leftBit = 0;     // leftmost and rightmost active bits
@@ -77,7 +78,10 @@ Input = (leftBit + rightBit) / 2.0 ;   // compute the average, which sshould be 
 //process bits to input value
 
 pid.Compute();
+Output += 16;
 //output to motors
+
+//Serial.printf("In: %f   Out: %f\n", Input, Output);
 
 motor_write(50, 50);
 
@@ -93,7 +97,7 @@ else if (operationMode == 1)  // Manual controle mode 1
   int motor_L = constrain(50 + baseSpeed + turnEffect, 0, 100);
   int motor_R = constrain(50 + baseSpeed - turnEffect, 0, 100);
 
-  Serial.printf("bSp: %d    turE: %d    L: %d   R: %d   \n",baseSpeed, turnEffect, motor_L, motor_R); 
+  //Serial.printf("bSp: %d    turE: %d    L: %d   R: %d   \n",baseSpeed, turnEffect, motor_L, motor_R); 
   motor_write(motor_L, motor_R);
 
 

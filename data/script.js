@@ -1,7 +1,7 @@
 var gateway = `ws://${window.location.hostname}/ws`;
 ////////////////////////////////////////////////////////////TEMPORARY
 console.warn('TEMPORARY WS IP')
-gateway = `ws://192.168.1.163/ws`
+gateway = `ws://10.42.0.193/ws`
 var ws;
 var autosaveActive = false;
 window.addEventListener('load', onLoad);
@@ -55,10 +55,12 @@ function onMessage(event) {
                 configContainer.querySelectorAll('.config-slider')[1].value = msg.P1 / 10.0
                 configContainer.querySelectorAll('.config-slider')[2].value = msg.P2 / 10.0
                 configContainer.querySelectorAll('.config-slider')[3].value = msg.P3 / 10.0
+                configContainer.querySelectorAll('.config-slider')[4].value = msg.P4
                 updateSlider(configContainer.querySelectorAll('.config-slider')[0])
                 updateSlider(configContainer.querySelectorAll('.config-slider')[1])
                 updateSlider(configContainer.querySelectorAll('.config-slider')[2])
                 updateSlider(configContainer.querySelectorAll('.config-slider')[3])
+                updateSlider(configContainer.querySelectorAll('.config-slider')[4])
             }
 
             else{

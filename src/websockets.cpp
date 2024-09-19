@@ -33,14 +33,20 @@ void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsE
     {
       Serial.println("CONFIG REQUEST");
       params_t loadedParams = readParams();
-      client->printf("{\"type\":\"params\",\"P0\":%d,\"P1\":%d,\"P2\":%d,\"P3\":%d}", loadedParams.P0, loadedParams.P1, loadedParams.P2, loadedParams.P3);
+      client->printf("{\"type\":\"params\",\"P0\":%d,\"P1\":%d,\"P2\":%d,\"P3\":%d,\"P4\":%d}", loadedParams.P0, loadedParams.P1, loadedParams.P2, loadedParams.P3, loadedParams.P4);
     }
     else if(msg["type"] == "config-update")
     {
       Serial.println("NEW CONFIG");
       Serial.printf("Received: %s\n", message.c_str());
-      params_t newParams = {(int)(msg["P0"].as<float>() * 10),(int)(msg["P1"].as<float>() * 10),(int)(msg["P2"].as<float>() * 10),(int)(msg["P3"].as<float>() * 10)};
+      params_t newParams = {(int)(msg["P0"].as<float>() * 10),(int)(msg["P1"].as<float>() * 10),(int)(msg["P2"].as<float>() * 10),(int)(msg["P3"].as<float>() * 10),(int)(msg["P4"].as<float>())};
       updateParams(newParams);
+      if (newParams.P4 != 0)
+      {
+        motors_set_pwm_frequency(newParams.P4); // update the motor frequency
+      }
+      
+      
     }
     else if (msg["type"] == "AUTO_CONTROL")
     {
@@ -105,7 +111,7 @@ void captureMeasurements(){
 
   buffer[bufferIndex].setpoint = (int)Setpoint * 10;
   buffer[bufferIndex].input = (int)Input * 10;
-  buffer[bufferIndex].output = (int)Output * 10;
+  buffer[bufferIndex].output = (int)(Output * 10.0);
 
   buffer[bufferIndex].encoder_L = cumulative_L;
   buffer[bufferIndex].encoder_R = cumulative_R;

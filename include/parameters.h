@@ -9,6 +9,7 @@ struct params_t {
     int16_t P1;
     int16_t P2;
     int16_t P3;
+    int16_t P4;
     
 };
 

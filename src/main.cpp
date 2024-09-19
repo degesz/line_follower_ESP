@@ -31,7 +31,7 @@ AS5600 encoder;
 
 
 Ticker measurement_timer(captureMeasurements, 1, 0, MILLIS);
-Ticker encoder_timer(updateEncoders, 100, 0, MILLIS);
+Ticker encoder_timer(updateEncoders, 6, 0, MILLIS);
 Ticker control_loop_timer(controlLoop, 10, 0, MILLIS);
 Ticker LEDs_timer(LEDs_update, 40, 0, MILLIS);
 
@@ -72,25 +72,26 @@ void setup(){
     Serial.begin(921600);
     Serial.setDebugOutput(true);  // sends all log_e(), log_i() messages to USB HW CDC
     Serial.setTxTimeoutMs(0);       // sets no timeout when trying to write to USB HW CDC
-    delay(3000);
+    delay(2000);
     int status = WL_IDLE_STATUS;
     Serial.println("\nConnecting");
-   // Serial.println(get_wifi_status(status));
-    if (!WiFi.config(local_IP, gateway, subnet, primaryDNS, secondaryDNS)) {
-    Serial.println("STA Failed to configure");
-  }
+  ///// // Serial.println(get_wifi_status(status));
+  /////  if (!WiFi.config(local_IP, gateway, subnet, primaryDNS, secondaryDNS)) {
+  /////  Serial.println("STA Failed to configure");
+  /////}
+  delay(5000);
     WiFi.begin(ssid, password);
     while(status != WL_CONNECTED){
         delay(500);
         status = WiFi.status();
-    //    Serial.println(get_wifi_status(status));
+        Serial.println(get_wifi_status(status));
     }
 
     Serial.println("\nConnected to the WiFi network");
     Serial.print("Local ESP32 IP: ");
     Serial.println(WiFi.localIP());
 
-    paramsBegin();
+    
 
 
      //Initialize SPIFFS
@@ -119,6 +120,9 @@ void setup(){
       contentType = "text/css";
     } else if (filename.endsWith(".html")) {
       contentType = "text/html";
+    }
+    else if (filename.endsWith(".svg")) {
+      contentType = "image/svg+xml";
     }
 
     if (SPIFFS.exists(filename)) {
@@ -171,9 +175,27 @@ void setup(){
 
   // Start server
   server.begin();
+  paramsBegin();
   setup_controlLoop();
   LEDs_setup();
   motor_setup();
+
+  motors_set_pwm_frequency(440);
+  motor_write(53, 53);
+  delay(150);
+  motors_set_pwm_frequency(550);
+  motor_write(53, 53);
+  delay(150);
+  motors_set_pwm_frequency(660);
+  motor_write(53, 53);
+  delay(150);
+
+  params_t loadedParams = readParams();
+  if (loadedParams.P4 == 0)
+  {
+    loadedParams.P4 = 100;
+  }
+  motors_set_pwm_frequency(loadedParams.P4);
 
   initEncoders();
 

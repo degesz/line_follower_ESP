@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
     {
       title: "PID Control",
       drawPoints: true,
-      //valueRange: [0, 8192],
+      valueRange: [0, 32],
       labels: ['Time', 'Setpoint', 'Input', 'Output'],
       showRoller: false,
       showLabelsOnHighlight: false,
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
     {
       title: "Motor current",
       drawPoints: true,
-      valueRange: [0, 8192],
+      valueRange: [0, 4096],
       labels: ['Time', 'Current L', 'Current R'],
       showRoller: false,
       showLabelsOnHighlight: false,

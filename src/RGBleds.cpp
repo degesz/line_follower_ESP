@@ -1,6 +1,6 @@
 #include "RGBleds.h"
 
-uint8_t brightness = 18;
+uint8_t brightness = 8;
 
 Adafruit_NeoPixel pixels(numPixels, ledPin, NEO_GRB + NEO_KHZ800);
 
@@ -12,7 +12,7 @@ void LEDs_setup() {
 
 long hue = 0;  
 
-int fadeStep = 25;
+int fadeStep = 15;
 const int fadeTime = 50;
 uint32_t lastFadeTime = 0;
 int Sig_Led_2_PWM = 0;
