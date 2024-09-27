@@ -13,7 +13,7 @@ const int shiftDataPin = GPIO_NUM_4;
 
 void setup_controlLoop();
 void controlLoop();
-
+void updateTunings();
 
 
 extern params_t savedParams;

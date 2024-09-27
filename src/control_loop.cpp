@@ -1,7 +1,8 @@
 #include "control_loop.h"
 
 double Setpoint = 16, Input, Output;
-double Kp = 2, Ki = 0, Kd = 0;
+double Kp = 1, Ki = 0, Kd = 0;
+double speed;
 
 PID pid(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
@@ -20,31 +21,34 @@ void setup_controlLoop(){
   pid.SetMode(AUTOMATIC);//turn the PID on
 }
 
+void updateTunings(){
+  pid.SetTunings(Kp, Ki, Kd);//apply PID gains
+  Serial.printf("new tunings: P: %2f  I: %2f  D: %2f \n", Kp, Ki, Kd);
+}
+
 void controlLoop(){
 
 if (operationMode == 0)  /////////////  Auto PID mode 0
 {
   //////shift in bits from sensor
 bool sensorBits[32] = {0};
-digitalWrite(parallelLoadPin, HIGH);    //Load parallel data into shift registers
-// GPIO.out_w1ts = (1 << parallelloadPin);
+ //Load parallel data into shift registers
+GPIO.out_w1ts = (1 << parallelLoadPin);
 
 
 for (byte i = 0; i < 32; i++) // Shift in all 32 bits
 {
-    //sensorBits[i] = digitalRead(shiftDataPin);  // Read the bit into the array
+ // Read the bit into the array
    sensorBits[i] = (GPIO.in >> 4) & 0x1;
    sensorBits[i] = !sensorBits[i];
 
- // digitalWrite(shiftClkPin, HIGH);    // Pulse clock signal to advance shift registers
+  // Pulse clock signal to advance shift registers
    GPIO.out_w1ts = (1 << shiftClkPin);
-  //digitalWrite(shiftClkPin, LOW); 
    GPIO.out_w1tc = (1 << shiftClkPin);
 
 }
 
-digitalWrite(parallelLoadPin, LOW);
-// GPIO.out_w1tc = (1 << parallelloadPin);
+ GPIO.out_w1tc = (1 << parallelLoadPin);
 
 
 //for (int i = 0; i < 32; i++) {
@@ -78,12 +82,14 @@ Input = (leftBit + rightBit) / 2.0 ;   // compute the average, which sshould be 
 //process bits to input value
 
 pid.Compute();
-Output += 16;
-//output to motors
+
 
 //Serial.printf("In: %f   Out: %f\n", Input, Output);
 
-motor_write(50, 50);
+int motor_L = constrain(50 - speed * 5 + Output, 0, 100);
+int motor_R = constrain(50 - speed * 5 - Output, 0, 100);
+Serial.printf("Speed: %1f    Output: %2f    L: %d   R: %d   \n",speed, Output, motor_L, motor_R); 
+motor_write(motor_L, motor_R);
 
 }
 

@@ -13,6 +13,12 @@ void paramsBegin() {
     } else {
         Serial.println("Failed to initialize preferences storage.");
     }
+
+    Kp = savedParams.P0 / 10.0;
+    Ki = savedParams.P1 / 10.0;
+    Kd = savedParams.P2 / 10.0;
+    speed = savedParams.P3 / 10;
+    updateTunings();
 }
 
 void updateParams(params_t params) {
@@ -24,6 +30,13 @@ void updateParams(params_t params) {
     } else {
         Serial.println("Failed to initialize preferences storage.");
     }
+
+    Kp = savedParams.P0 / 10.0;
+    Ki = savedParams.P1 / 10.0;
+    Kd = savedParams.P2 / 10.0;
+    speed = savedParams.P3 / 10;
+    updateTunings();
+  
 }
 
 params_t readParams() {

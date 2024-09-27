@@ -111,7 +111,7 @@ void captureMeasurements(){
 
   buffer[bufferIndex].setpoint = (int)Setpoint * 10;
   buffer[bufferIndex].input = (int)Input * 10;
-  buffer[bufferIndex].output = (int)(Output * 10.0);
+  buffer[bufferIndex].output = (int)( map(Output, -16, 16, 0, 32) * 10);
 
   buffer[bufferIndex].encoder_L = cumulative_L;
   buffer[bufferIndex].encoder_R = cumulative_R;

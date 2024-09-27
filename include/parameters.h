@@ -3,6 +3,10 @@
 
 #include <Arduino.h>
 #include <Preferences.h>
+#include "motor_control.h"
+
+extern double Kp, Ki, Kd;
+extern double speed;
 
 struct params_t {
     int16_t P0;
@@ -18,7 +22,7 @@ void paramsBegin();
 void updateParams(params_t params);
 params_t readParams();
 
-
+extern void updateTunings();
 
 
 #endif
