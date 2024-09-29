@@ -32,24 +32,19 @@ if (operationMode == 0)  /////////////  Auto PID mode 0
 {
   //////shift in bits from sensor
 bool sensorBits[32] = {0};
- //Load parallel data into shift registers
-GPIO.out_w1ts = (1 << parallelLoadPin);
+ 
+GPIO.out_w1ts = (1 << parallelLoadPin);//Load parallel data into shift registers
 
 
 for (byte i = 0; i < 32; i++) // Shift in all 32 bits
 {
- // Read the bit into the array
-   sensorBits[i] = (GPIO.in >> 4) & 0x1;
+   sensorBits[i] = (GPIO.in >> 4) & 0x1;// Read the bit into the array
    sensorBits[i] = !sensorBits[i];
-
-  // Pulse clock signal to advance shift registers
-   GPIO.out_w1ts = (1 << shiftClkPin);
+  
+   GPIO.out_w1ts = (1 << shiftClkPin);// Pulse clock signal to advance shift registers
    GPIO.out_w1tc = (1 << shiftClkPin);
-
 }
-
  GPIO.out_w1tc = (1 << parallelLoadPin);
-
 
 //for (int i = 0; i < 32; i++) {
 //    Serial.print(sensorBits[i] ? "■" : " ");
@@ -60,35 +55,46 @@ for (byte i = 0; i < 32; i++) // Shift in all 32 bits
 byte leftBit = 0;     // leftmost and rightmost active bits
 byte rightBit = 0;
 
-for (byte i = 1; i < 31; i++)   // find the bits, to reject false positives, two consecutive bits must be active
+bool outOfBounds = true;  // start with true, read sensors to determine real state
+
+for (byte i = 1; i < 30; i++)   // find the bits, to reject false positives, two consecutive bits must be active
 {
   if (sensorBits[i] == 1 && sensorBits[i+1] == 1)
   {
     leftBit = i;
+    //Serial.printf("Left bit: %d \n", i);
+    outOfBounds = false;
     break;
   }
 }
 
-for (byte i = 31; i > 1; i--)
+for (byte i = 30; i > 1; i--)
 {
   if (sensorBits[i] == 1 && sensorBits[i-1] == 1)
   {
     rightBit = i;
+    //Serial.printf("Right bit: %d \n", i);
+    outOfBounds = false;
     break;
   }
+  
+}
+if (!outOfBounds)
+{
+  Input = (leftBit + rightBit) / 2.0 ;   // compute the average, which sshould be middle of line
+}
+else
+{
+  Serial.printf(" OOB, Input: %1f \n" , Input);
 }
 
-Input = (leftBit + rightBit) / 2.0 ;   // compute the average, which sshould be middle of line
-//process bits to input value
 
 pid.Compute();
 
-
-//Serial.printf("In: %f   Out: %f\n", Input, Output);
-
 int motor_L = constrain(50 - speed * 5 + Output, 0, 100);
 int motor_R = constrain(50 - speed * 5 - Output, 0, 100);
-Serial.printf("Speed: %1f    Output: %2f    L: %d   R: %d   \n",speed, Output, motor_L, motor_R); 
+//Serial.printf("Speed: %1f    Output: %2f    L: %d   R: %d   \n",speed, Output, motor_L, motor_R); 
+//Serial.println(millis());
 motor_write(motor_L, motor_R);
 
 }

@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function() {
            timestamp: obj.timestamp,
            setpoint: obj.setpoint / 10.0,
            input: obj.input / 10.0,
-           output: obj.output / 10.0 
+           output: obj.output / 100.0 
          })))
      data0.splice(0, data0.length - 3000); // Remove the first elements to keep the array length
      for (let i = 0; i < data0.length; i++) {

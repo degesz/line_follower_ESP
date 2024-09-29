@@ -32,8 +32,8 @@ AS5600 encoder;
 
 Ticker measurement_timer(captureMeasurements, 1, 0, MILLIS);
 Ticker encoder_timer(updateEncoders, 6, 0, MILLIS);
-Ticker control_loop_timer(controlLoop, 10, 0, MILLIS);
-Ticker LEDs_timer(LEDs_update, 40, 0, MILLIS);
+Ticker control_loop_timer(controlLoop, 2, 0, MILLIS);
+Ticker LEDs_timer(LEDs_update, 50, 0, MILLIS);
 
 // Handle 404 errors
 void notFound(AsyncWebServerRequest *request) {
@@ -179,6 +179,8 @@ void setup(){
   setup_controlLoop();
   LEDs_setup();
   motor_setup();
+
+  ws.textAll("RESET");
 
   motors_set_pwm_frequency(440);
   motor_write(53, 53);

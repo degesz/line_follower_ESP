@@ -1,7 +1,7 @@
 var gateway = `ws://${window.location.hostname}/ws`;
 ////////////////////////////////////////////////////////////TEMPORARY
-console.warn('TEMPORARY WS IP')
-gateway = `ws://10.42.0.193/ws`
+//console.warn('TEMPORARY WS IP')
+//gateway = `ws://10.42.0.193/ws`
 var ws;
 var autosaveActive = false;
 window.addEventListener('load', onLoad);
@@ -33,6 +33,19 @@ function onClose(event) {
 function onMessage(event) {
     if (typeof event.data === 'string') {
         try {
+
+           // if (event.data = "RESET") {
+           //     measurementBuffer = {};
+           //     scale = 1;
+           //     offsetX = 0;
+           //     offsetY = 0;
+           //     old_X = 1000
+           //     old_Y = 1600
+           //     old_angle = -Math.PI/2;
+           //     ws.send(JSON.stringify({type: 'config-request'}))
+           //     return;
+           // }
+
             var msg = JSON.parse(event.data)
             if (msg.type == "ping") {
                 var pingTime = Date.now() - msg.sendTime;
