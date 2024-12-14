@@ -46,10 +46,10 @@ for (byte i = 0; i < 32; i++) // Shift in all 32 bits
 }
  GPIO.out_w1tc = (1 << parallelLoadPin);
 
-//for (int i = 0; i < 32; i++) {
-//    Serial.print(sensorBits[i] ? "■" : " ");
-//  }
-//Serial.println();  // Final newline after all bits are printed
+for (int i = 0; i < 32; i++) {
+    Serial.print(sensorBits[i] ? "■" : " ");
+  }
+Serial.println();  // Final newline after all bits are printed
 
     ///////////PROCESSING
 byte leftBit = 0;     // leftmost and rightmost active bits
@@ -95,7 +95,7 @@ int motor_L = constrain(50 - speed * 5 + Output, 0, 100);
 int motor_R = constrain(50 - speed * 5 - Output, 0, 100);
 //Serial.printf("Speed: %1f    Output: %2f    L: %d   R: %d   \n",speed, Output, motor_L, motor_R); 
 //Serial.println(millis());
-motor_write(motor_L, motor_R);
+motor_write(motor_R, motor_L);
 
 }
 

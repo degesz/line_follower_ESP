@@ -1,7 +1,7 @@
 #ifndef RGBLEDS_H
 #define RGBLEDS_H
 
-const int ledPin = 35;
+const int ledPin = 3;
 const int numPixels = 10;
 
 const int Led_Sig1_pin = 5;
