@@ -1,6 +1,6 @@
 #include "RGBleds.h"
 
-uint8_t brightness = 15;
+uint8_t brightness = 100;
 
 Adafruit_NeoPixel pixels(numPixels, ledPin, NEO_GRB + NEO_KHZ800);
 
